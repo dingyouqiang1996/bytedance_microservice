@@ -12,3 +12,14 @@
     - 其中 `logger` 是子目录, 即 package 的路径
 
 ![](img/bytedance_1.png)
+
+- 模块名并不是源码仓库地址
+- 当执行 `go get k8s.io/kube-openapi` 时会先向 `https://k8s.io/kube-openapi?go-get=1` 发送一个GET请求
+  - response 里有个 `name="go-import"` 的meta标签
+  - 对应的 content 由三部分组成:
+    - 模块名称
+    - 版本控制工具(git/svn等)
+    - 源码仓库地址
+  - 然后通过 `git clone` 去下载源码
+
+![](img/bytedance_2.png)
