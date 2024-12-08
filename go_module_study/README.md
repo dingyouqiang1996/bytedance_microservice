@@ -10,4 +10,5 @@
 - 模块名称中可以包含子目录
   - 如 `go get gorm.io/gorm/logger`
     - 其中 `logger` 是子目录, 即 package 的路径
+
 ![](img/bytedance_1.png)
