@@ -61,3 +61,25 @@
   - 如果一致则把模块存入本地缓存目录, 并将哈希值写入 `go.sum` 文件
   - 后续使用该模型时通过 `go.sum` 来校验该模块自下载以来未曾被修改过
 - 设置 `GOSUMDB=off` 或者 `go get` 时使用 `-insecure`, 表示不需要验证合法性
+## 私有module的开发、部署和调用
+- 在实际工作中，go module通常用来封装接口API，接口供公司内部调用，所以go module不能发布到公网
+- ubuntu上安装gitlba
+```shell
+sudo apt-get update
+sudo apt-get install -y curl openssh-server ca-certificates tzdata perl
+sudo apt-get install -y postfix
+curl https://packgages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh|sudo bash
+sudo apt-get install gitlab-ee
+# 在/etc/gitlab/gitlab.rb 添加 external_url 'http://gitlab.dqq.com'
+sudo gitlab-ctl reconfigure
+sudo gitlab-ctl restart
+```
+### 开发私有模块
+- `go get gitlab.dqq.com/pub-sdk`
+- 仅供模块内部使用的变量、结构体和函数放到internal包下。internal父亲的后代可以访问internal内部的所有(Exported)内容
+- 左图, Web目录下的内容是供模块使用方调用的，一般对外提供的所有函数都要写单元测试
+- `main.go` 可有可无，主要用于生成可执行文件 `go install gitlab.dqq.com/pub-sdk(需先执行 go get)`
+
+![](img/go_5.png)
+### GOPROXY=direct
+- 
