@@ -88,3 +88,18 @@ sudo gitlab-ctl restart
 - git clone私有仓库时通常需要走ssh以解决权限问题
 - 私有模块不需要使用公共的checksum数据库。GONOSUMDB=gitlab.mycorp.com表示以gitlab.mycorp.com开头的模块不需要执行checksum
 - GOPRIVATE是GONOPROXY和GONOSUMDB的默认值，所以设置GOPRIVATE后就不需要再设置GONOPROXY和GONOSUMDB了
+
+### 部署私有GOPROXY
+- goproxy.io 除了提供国内可用的 go module 代理之外，还提供了部署私有go proxy的解决方案
+- 编译安装
+```shell
+git clone https://github.com/goproxyio/goproxy.git
+cd goproxy
+make
+```
+- 启动
+```shell
+./bin/goproxy -listen=0.0.0.0:80 -cacheDir=$home/go_module_cache -proxy https://goproxy.io -exclude "gitlab.mycorp.com"
+```
+- -cacheDir 是代理使用的缓存目录，跟GOMODCACHE区分开。如果私有代理上找不到模块，则去访问公开代理，-proxy指定公开代理。-exclude指定哪些模块直接去代码仓库下载
+- GOPROXY=myproxy.com,direct
