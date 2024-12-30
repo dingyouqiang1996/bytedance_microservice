@@ -82,4 +82,9 @@ sudo gitlab-ctl restart
 
 ![](img/go_5.png)
 ### GOPROXY=direct
-- 
+- GOPROXY 可以配置多个。用逗号分隔表示当第一个proxy返回401或404时会访问第二个proxy，用竖线分隔表示当第一个proxy发生任何错误时(如超时)都会访问第二个proxy
+- GOPROXY 的默认值为: https://proxy.golang.org,direct。direct表示不走代理，直接从源码库下载(先发送go-get=1请求)
+- 所有代理都不会访问私有仓库，所以go get私有模块时会命中direct。为避免下载私有模块时去访问代理，可以把私有模块的前缀赋给GONOPROXY,如GONOPORXY=gitlab.mycorp.com
+- git clone私有仓库时通常需要走ssh以解决权限问题
+- 私有模块不需要使用公共的checksum数据库。GONOSUMDB=gitlab.mycorp.com表示以gitlab.mycorp.com开头的模块不需要执行checksum
+- GOPRIVATE是GONOPROXY和GONOSUMDB的默认值，所以设置GOPRIVATE后就不需要再设置GONOPROXY和GONOSUMDB了
