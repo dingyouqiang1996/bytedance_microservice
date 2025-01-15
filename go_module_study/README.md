@@ -115,3 +115,30 @@ make
 
 ![](img/go_6.png)
 
+## go module版本规范
+- go module每个版本以v开头, 后面跟语义版本
+- 当vcs为git时, 通常情况下的版本就是git tag的版本
+- 没有语义版本时会生成一个伪版本
+  - 例如 v0.0.0-20180306012644-bacd9c7ef1dd
+  - 第二部分表示代码生成时间
+  - 第三部分是commit的前12个字符
+
+![](img/b_1.png)
+### 模块版本兼容
+- 主版本为2或更高版本时, go模块路径必须带有像/v2或/v3这样的主版本后缀
+  - 比如 `github.com/gocolly/colly/v2`, `github.com/mailru/go-clickhouse/v2`
+- `go get` 和 `go install` 可以指定版本号
+  - 如 `go get github.comcespare/xxhash@v1.1.0`
+- 主版本号不同表示不兼容, 一个项目里可能同时依赖不同的主版本号
+
+![](img/b_2.png)
+- go get -u 不会更新主版本号, j即-u表示更新到当前主版本号下的最新版本
+- 在使用go module规范之前, 有些第三方库的高版本没有加 /v2或/v3后缀
+  - 此时需要加 incompatible
+  - 如 `github.com/go-redis/redis v6.15.9+incompatible`路径没有 /v6后缀
+- 主版本后缀不允许有 /v0 或 /v1 出现
+  - 作为特殊情况，即时在v0和v1, 以gopkg.in/ 开头的模块路径必须始终具有主版本后缀
+  - 后缀必须以点开头, 而不是斜杠
+  - 例如 `gopkg.in/check.v1`, `gopkg.in/yaml.v3`
+
+
